@@ -1,0 +1,28 @@
+{
+  "name": "eduardo-tiny-erp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafaelDN/eduardo-tiny-erp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.3.2",
+    "dotenv": "^16.0.3",
+    "json2csv": "^6.0.0-alpha.2",
+    "mysql": "^2.18.1",
+    "node-cron": "^3.0.2",
+    "node-file-logger": "^0.9.5"
+  },
+  "bugs": {
+    "url": "https://github.com/RafaelDN/eduardo-tiny-erp/issues"
+  },
+  "homepage": "https://github.com/RafaelDN/eduardo-tiny-erp#readme"
+}
