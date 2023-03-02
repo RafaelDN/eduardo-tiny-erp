@@ -14,7 +14,7 @@ RUN npm install
 EXPOSE 80
 
 # Inicia o cron em segundo plano
-CMD node index.js
+CMD node index.js --mode cron
 
 ###########################
 # docker build . -t dudu:v2

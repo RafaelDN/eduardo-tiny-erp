@@ -147,3 +147,14 @@ import * as dotenv from 'dotenv'
 dotenv.config();
 const env = process.env;
 export { env };
+
+
+export function GetAnteontem() {
+  var date = new Date()
+  var yesterday = new Date(date.getTime());
+  yesterday.setDate(date.getDate() - 2);
+
+  return {
+    data: yesterday.toLocaleDateString("pt-BR")
+  }
+}

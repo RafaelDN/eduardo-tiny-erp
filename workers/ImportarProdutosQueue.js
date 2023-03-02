@@ -5,7 +5,7 @@ import { BuscarProdutoAtualizacaoQueue } from "../tinyapi.js";
 export const ImportarProdutosQueue = async () => {
 
       try {
-            const DataCorte = '24/02/2023';
+            const DataCorte = '01/03/2023';
 
             let map = new Map()
             map.set("dataAlteracao", DataCorte);

@@ -1,4 +1,4 @@
-import { log, MapPedido, MapPedidoClient, MapPedidoItems } from "../helper.js";;
+import { GetAnteontem, log, MapPedido, MapPedidoClient, MapPedidoItems } from "../helper.js";;
 import { BulkInsertPedido, BulkInsertPedidoCliente, BulkInsertPedidoItems, SelectPedidos } from "../mysql.js";
 import { BuscarPedido, BuscarPedidos } from "../tinyapi.js";
 
@@ -7,7 +7,7 @@ export const ImportarPedidos = async () => {
       const pedidosImportados = [];
 
       try {
-            const DataCorte = '24/02/2023';
+            const DataCorte = GetAnteontem().data;
 
             let map = new Map()
             map.set("dataInicial", DataCorte);
@@ -51,7 +51,7 @@ export const ImportarPedidos = async () => {
                         const resultBulk1 = await BulkInsertPedido([mapped])
                         const resultBulk2 = await BulkInsertPedidoCliente([mappedClient])
                         const resultBulk3 = await BulkInsertPedidoItems(mappedItems)
-                        console.table([resultBulk1, resultBulk2, resultBulk3])
+                        // console.table([resultBulk1, resultBulk2, resultBulk3])
                         //console.log({mapped,mappedClient,mappedItems})
 
                         pedidosImportados.push(pedido.pedido.id)
