@@ -1,4 +1,4 @@
-import { GetAnteontem, log, MapPedido, MapPedidoClient, MapPedidoItems } from "../helper.js";;
+import { GetDataCorte, log, MapPedido, MapPedidoClient, MapPedidoItems } from "../helper.js";;
 import { BulkInsertPedido, BulkInsertPedidoCliente, BulkInsertPedidoItems, SelectPedidos } from "../mysql.js";
 import { BuscarPedido, BuscarPedidos } from "../tinyapi.js";
 
@@ -7,7 +7,8 @@ export const ImportarPedidos = async () => {
       const pedidosImportados = [];
 
       try {
-            const DataCorte = GetAnteontem().data;
+            const DataCorte = GetDataCorte(10).data;
+            console.log(`DataCorte ImportarPedidos`, DataCorte)
 
             let map = new Map()
             map.set("dataInicial", DataCorte);

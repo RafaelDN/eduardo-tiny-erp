@@ -1,11 +1,12 @@
-import { GetAnteontem, log } from "../helper.js";
+import { GetDataCorte, log } from "../helper.js";
 import { InsertProdutoEstoque } from "../mysql.js";
 import { BuscarProdutoEstoqueQueue } from "../tinyapi.js";
 
 export const ImportarProdutosEstoqueQueue = async () => {
 
       try {
-            const DataCorte = GetAnteontem().data;
+            const DataCorte = GetDataCorte(10).data;
+            console.log(`DataCorte ImportarProdutosEstoqueQueue`, DataCorte)
 
             let map = new Map()
             map.set("dataAlteracao", DataCorte);

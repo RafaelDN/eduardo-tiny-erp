@@ -149,10 +149,10 @@ const env = process.env;
 export { env };
 
 
-export function GetAnteontem() {
+export function GetDataCorte(diasParaTras) {
   var date = new Date()
   var yesterday = new Date(date.getTime());
-  yesterday.setDate(date.getDate() - 2);
+  yesterday.setDate(date.getDate() - diasParaTras);
 
   return {
     data: yesterday.toLocaleDateString("pt-BR")

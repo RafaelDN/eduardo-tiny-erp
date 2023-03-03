@@ -1,4 +1,4 @@
-import { GetAnteontem, log } from "./helper.js";
+import { log } from "./helper.js";
 import { ImportarPedidos } from "./workers/ImportarPedidos.js";
 import { ImportarProdutos } from "./workers/ImportarProdutos.js";
 import { ImportarProdutosEstoqueQueue } from "./workers/ImportarProdutosEstoqueQueue.js";

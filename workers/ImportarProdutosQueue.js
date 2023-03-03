@@ -1,11 +1,12 @@
-import { log } from "../helper.js";
+import { GetDataCorte, log } from "../helper.js";
 import {  UpdateProduto } from "../mysql.js";
 import { BuscarProdutoAtualizacaoQueue } from "../tinyapi.js";
 
 export const ImportarProdutosQueue = async () => {
 
       try {
-            const DataCorte = '01/03/2023';
+            const DataCorte = GetDataCorte(10).data;
+            console.log(`DataCorte ImportarProdutosQueue`, DataCorte)
 
             let map = new Map()
             map.set("dataAlteracao", DataCorte);
