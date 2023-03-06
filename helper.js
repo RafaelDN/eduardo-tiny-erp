@@ -103,6 +103,7 @@ export function MapProduto(produto) {
         diametroEmbalagem : produto.diametroEmbalagem,
         qtd_volumes : produto.qtd_volumes,
         categoria : produto.categoria,
+        situacao: produto.situacao,
   };
 }
 

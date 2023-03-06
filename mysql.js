@@ -103,13 +103,13 @@ const InsertProdutoEstoque = (id, saldo)  => {
       })
 }
 
-const UpdateProduto = (id, unidadeParam, precoParam, precoPromocionalParam, custoParam)  => {
+const UpdateProduto = (id, unidadeParam, precoParam, precoPromocionalParam, custoParam, situacao)  => {
 
       return new Promise((s, e) => {
 
             const connection = createConn()
             connection.connect();
-            connection.query(`call updateProduto(?,?,?,?,?)`, [id, unidadeParam, precoParam, precoPromocionalParam, custoParam],
+            connection.query(`call updateProduto(?,?,?,?,?,?)`, [id, unidadeParam, precoParam, precoPromocionalParam, custoParam, situacao],
             function (error, results2, fields) {
                   connection.destroy();
 
@@ -121,6 +121,23 @@ const UpdateProduto = (id, unidadeParam, precoParam, precoPromocionalParam, cust
       })
 }
 
+const UpdateProdutoSituacao = (id, situacao)  => {
+
+      return new Promise((s, e) => {
+
+            const connection = createConn()
+            connection.connect();
+            connection.query(`update produtos set situacao = ?, data_alteracao = now() where id = ?`, [situacao, id],
+            function (error, results2, fields) {
+                  connection.destroy();
+
+                  if(error) e(error)
+                  s(results2)
+
+            });
+
+      })
+}
 
 const BulkInsertPedido = async (pedidos)  => {
       return await BulkInsertQuery('pedidos', pedidos)
@@ -183,6 +200,7 @@ export {
       BulkInsertProdutoPreco,
 
       InsertProdutoEstoque,
-      UpdateProduto
+      UpdateProduto,
+      UpdateProdutoSituacao
 }
 

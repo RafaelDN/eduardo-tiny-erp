@@ -25,9 +25,9 @@ export const ImportarProdutosQueue = async () => {
                         const produto = produtos[index].produto;
 
                         try {
-                              const { id, unidade, preco, preco_promocional,  preco_custo} = produto;
+                              const { id, unidade, preco, preco_promocional,  preco_custo, situacao} = produto;
                               console.log(`Processando info ${id}`)
-                              const resultBulk1 = await UpdateProduto(id, unidade, preco, preco_promocional, preco_custo);
+                              const resultBulk1 = await UpdateProduto(id, unidade, preco, preco_promocional, preco_custo, situacao);
 
                         } catch (error) {
                               log.Error('erro for:' + produto.id, 'ImportarProdutosQueue', 'ImportarProdutosQueue', error)
