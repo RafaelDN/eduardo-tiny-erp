@@ -5,6 +5,7 @@ import { ImportarProdutosEstoqueQueue } from "./workers/ImportarProdutosEstoqueQ
 import { ImportarProdutosQueue } from "./workers/ImportarProdutosQueue.js";
 import cron from 'node-cron'
 import args from 'args'
+import { CheckProceduresExists, Ping } from "./mysql.js";
 
 args.option('mode', 'Como o processo será executado. Por padrão vai rodar como um console application', 'default')
 const flags = args.parse(process.argv)
@@ -24,7 +25,38 @@ if(flags.mode === 'cron')
 
 async function main() {
       try {
+
             log.Info("Início do processo. mode: " + flags.mode);
+
+            try {
+                  log.Info("Ping it");
+                  await Ping();
+            } catch (error) {
+                  log.Error("Erro processo: Ping", '', '', error);
+                  return;
+            }
+
+            try {
+                  log.Info("Check procedure InsertProdutoEstoque");
+                  var result = await CheckProceduresExists('InsertProdutoEstoque');
+                  console.log(result[0]["Create Procedure"])
+                  if(!result)
+                        return;
+            } catch (error) {
+                  log.Error("Erro processo: CheckProceduresExists InsertProdutoEstoque", '', '', error);
+                  return;
+            }
+
+            try {
+                  log.Info("Check procedure updateProduto");
+                  var result = await CheckProceduresExists('updateProduto');
+                  console.log(result[0]["Create Procedure"])
+                  if(!result)
+                        return;
+            } catch (error) {
+                  log.Error("Erro processo: CheckProceduresExists updateProduto", '', '', error);
+                  return;
+            }
 
             try {
                   log.Info("Exec processo: ImportarPedidos");
@@ -33,11 +65,18 @@ async function main() {
                   log.Error("Erro processo: ImportarPedidos", '', '', error);
             }
 
+            // try {
+            //       log.Info("Exec processo: ImportarProdutos");
+            //       await ImportarProdutos();
+            // } catch (error) {
+            //       log.Error("Erro processo: ImportarProdutos", '', '', error);
+            // }
+
             try {
-                  log.Info("Exec processo: ImportarProdutos");
-                  await ImportarProdutos();
+                  log.Info("Exec processo: ImportarProdutosQueue");
+                  await ImportarProdutosQueue();
             } catch (error) {
-                  log.Error("Erro processo: ImportarProdutos", '', '', error);
+                  log.Error("Erro processo: ImportarProdutosQueue", '', '', error);
             }
 
             try {
@@ -45,13 +84,6 @@ async function main() {
                   await ImportarProdutosEstoqueQueue();
             } catch (error) {
                   log.Error("Erro processo: ImportarProdutosEstoqueQueue", '', '', error);
-            }
-
-            try {
-                  log.Info("Exec processo: ImportarProdutosQueue");
-                  await ImportarProdutosQueue();
-            } catch (error) {
-                  log.Error("Erro processo: ImportarProdutosQueue", '', '', error);
             }
 
             log.Info("Fim do processo");

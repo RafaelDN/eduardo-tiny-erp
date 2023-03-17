@@ -1,5 +1,5 @@
 import { GetDataCorte, log, MapPedido, MapPedidoClient, MapPedidoItems } from "../helper.js";;
-import { BulkInsertPedido, BulkInsertPedidoCliente, BulkInsertPedidoItems, SelectPedidos } from "../mysql.js";
+import { BulkInsertPedido, BulkInsertPedidoCliente, BulkInsertPedidoItems, SelectPedidos, UpdateFullPedido } from "../mysql.js";
 import { BuscarPedido, BuscarPedidos } from "../tinyapi.js";
 
 export const ImportarPedidos = async () => {
@@ -7,11 +7,11 @@ export const ImportarPedidos = async () => {
       const pedidosImportados = [];
 
       try {
-            const DataCorte = GetDataCorte(10).data;
+            const DataCorte = GetDataCorte(5).data;
             console.log(`DataCorte ImportarPedidos`, DataCorte)
 
             let map = new Map()
-            map.set("dataInicial", DataCorte);
+            map.set("dataAtualizacao", DataCorte);
 
             const pedidosGravados = await SelectPedidos();
 
@@ -33,6 +33,14 @@ export const ImportarPedidos = async () => {
                         const existe = pedidosGravados.find(pg => pg.id == +pedido.pedido.id)
                         if(!!existe && existe.id == +pedido.pedido.id)
                         {
+                              if(pedido.pedido.situacao != existe.situacao)
+                              {
+                                    console.log('Atualizando pedido:' + pedido.pedido.id)
+                                    const PedidoCompleto = await BuscarPedido(pedido.pedido.id);
+                                    const mapped = MapPedido(PedidoCompleto.retorno.pedido);
+                                    await UpdateFullPedido(mapped);
+                              }
+
                               continue;
                         }
 

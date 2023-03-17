@@ -31,7 +31,7 @@ export const ImportarProdutos = async () => {
 
                         const resultBulk1 = await BulkInsertProduto([mapped])
                         const resultBulk3 = await BulkInsertProdutoPreco([items])
-                        console.table([resultBulk1, resultBulk3])
+                        //console.table([resultBulk1, resultBulk3])
 
                   } catch (error) {
                         console.log(error)

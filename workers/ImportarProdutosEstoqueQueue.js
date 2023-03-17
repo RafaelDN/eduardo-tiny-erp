@@ -5,7 +5,7 @@ import { BuscarProdutoEstoqueQueue } from "../tinyapi.js";
 export const ImportarProdutosEstoqueQueue = async () => {
 
       try {
-            const DataCorte = GetDataCorte(10).data;
+            const DataCorte = GetDataCorte(5).data;
             console.log(`DataCorte ImportarProdutosEstoqueQueue`, DataCorte)
 
             let map = new Map()

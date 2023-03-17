@@ -14,13 +14,47 @@ const createConn = () => {
           });
 }
 
-const SelectPedido = async (pedidoID)  => {
+const Ping = async ()  => {
 
       return new Promise((s, e) => {
 
             const connection = createConn()
             connection.connect();
-            connection.query('SELECT * FROM pedidos_itens where id = ?', pedidoID, function (error, results2, fields) {
+            connection.ping(function (error) {
+                  connection.destroy();
+
+                  if(error) e(error)
+                  s(true)
+            });
+
+      })
+}
+
+
+const CheckProceduresExists = async (nome)  => {
+
+      return new Promise((s, e) => {
+
+            const connection = createConn()
+            connection.connect();
+            connection.query(`SHOW CREATE PROCEDURE ${nome}`, function (error, results2) {
+                  connection.destroy();
+
+                  if(error) e(error)
+                  s(results2)
+
+            });
+
+      })
+}
+
+const SelectProduto = async (id)  => {
+
+      return new Promise((s, e) => {
+
+            const connection = createConn()
+            connection.connect();
+            connection.query('SELECT * FROM produtos where id = ?', id, function (error, results2, fields) {
                   connection.destroy();
 
                   if(error) e(error)
@@ -37,7 +71,7 @@ const SelectPedidos = ()  => {
 
             const connection = createConn()
             connection.connect();
-            connection.query('SELECT id FROM pedidos limit 0, 500000', function (error, results2, fields) {
+            connection.query('SELECT id, situacao FROM pedidos order by id desc limit 0, 500000', function (error, results2, fields) {
                   connection.destroy();
 
                   if(error) e(error)
@@ -185,9 +219,58 @@ const BulkInsertQuery = (tableName, pedidos)  =>{
 
 }
 
+const UpdateFullPedido = (target)  =>{
+
+      return new Promise((s, e) => {
+
+            var values = Object.keys(target)
+                  .filter(key => key != 'id')
+                  .map(key => ({key, value:target[key]}));
+
+            const connection = createConn()
+            connection.connect();
+            connection.query(`update pedidos set ${values.map(v => `${v.key} = ?`)}, data_alteracao = now() where id = ?`, [...values.map(v => v.value), target.id], function(error, results, fields) {
+                  connection.destroy();
+
+                  if(error) e(error)
+                  s(results);
+
+            });
+
+      });
+
+
+}
+
+const UpdateFullProduto = (target)  =>{
+
+      return new Promise((s, e) => {
+
+            var values = Object.keys(target)
+                  .filter(key => key != 'id')
+                  .map(key => ({key, value:target[key]}));
+
+            const connection = createConn()
+            connection.connect();
+            connection.query(`update produtos set ${values.map(v => `${v.key} = ?`)}, data_alteracao = now() where id = ?`, [...values.map(v => v.value), target.id], function(error, results, fields) {
+                  connection.destroy();
+
+                  if(error) e(error)
+                  s(results);
+
+            });
+
+      });
+
+
+}
+
 
 export {
-      SelectPedido,
+      Ping,
+      CheckProceduresExists,
+
+      SelectProduto,
       SelectPedidos,
       BulkInsertPedido,
       BulkInsertPedidoCliente,
@@ -201,6 +284,9 @@ export {
 
       InsertProdutoEstoque,
       UpdateProduto,
-      UpdateProdutoSituacao
+      UpdateProdutoSituacao,
+
+      UpdateFullPedido,
+      UpdateFullProduto
 }
 
