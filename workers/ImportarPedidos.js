@@ -64,6 +64,10 @@ export const ImportarPedidos = async () => {
                         //console.log({mapped,mappedClient,mappedItems})
 
                         pedidosImportados.push(pedido.pedido.id)
+                        pedidosGravados.push({
+                              id: +pedido.pedido.id,
+                              situacao: pedido.pedido.situacao
+                        })
 
                   } catch (error) {
                         console.log(error)

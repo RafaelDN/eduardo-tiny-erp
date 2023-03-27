@@ -65,13 +65,6 @@ async function main() {
                   log.Error("Erro processo: ImportarPedidos", '', '', error);
             }
 
-            // try {
-            //       log.Info("Exec processo: ImportarProdutos");
-            //       await ImportarProdutos();
-            // } catch (error) {
-            //       log.Error("Erro processo: ImportarProdutos", '', '', error);
-            // }
-
             try {
                   log.Info("Exec processo: ImportarProdutosQueue");
                   await ImportarProdutosQueue();
