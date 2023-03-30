@@ -40,7 +40,7 @@ async function main() {
                   log.Info("Check procedure InsertProdutoEstoque");
                   var result = await CheckProceduresExists('InsertProdutoEstoque');
                   console.log(result[0]["Create Procedure"])
-                  if(!result)
+                  if(!result[0]["Create Procedure"])
                         return;
             } catch (error) {
                   log.Error("Erro processo: CheckProceduresExists InsertProdutoEstoque", '', '', error);
@@ -51,7 +51,7 @@ async function main() {
                   log.Info("Check procedure updateProduto");
                   var result = await CheckProceduresExists('updateProduto');
                   console.log(result[0]["Create Procedure"])
-                  if(!result)
+                  if(!result[0]["Create Procedure"])
                         return;
             } catch (error) {
                   log.Error("Erro processo: CheckProceduresExists updateProduto", '', '', error);
