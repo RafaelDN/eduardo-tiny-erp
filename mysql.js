@@ -31,6 +31,26 @@ const Ping = async ()  => {
 }
 
 
+// const CheckProceduresExists = async (nome)  => {
+
+//       return new Promise((s, e) => {
+
+//             console.log('CheckProceduresExists')
+//             const connection = createConn()
+//             connection.connect();
+//             connection.query(`SHOW CREATE PROCEDURE ${nome}`, function (error, results2) {
+//                   console.log('CheckProceduresExists', error, results2)
+
+//                   connection.destroy();
+
+//                   if(error) e(error)
+//                   s(results2)
+
+//             });
+
+//       })
+// }
+
 const CheckProceduresExists = async (nome)  => {
 
       return new Promise((s, e) => {
@@ -38,7 +58,7 @@ const CheckProceduresExists = async (nome)  => {
             console.log('CheckProceduresExists')
             const connection = createConn()
             connection.connect();
-            connection.query(`SHOW CREATE PROCEDURE ${nome}`, function (error, results2) {
+            connection.query(`SELECT ROUTINE_DEFINITION FROM information_schema.ROUTINES WHERE SPECIFIC_NAME='${nome}'`, function (error, results2) {
                   console.log('CheckProceduresExists', error, results2)
 
                   connection.destroy();
@@ -50,6 +70,8 @@ const CheckProceduresExists = async (nome)  => {
 
       })
 }
+
+
 
 const SelectProduto = async (id)  => {
 

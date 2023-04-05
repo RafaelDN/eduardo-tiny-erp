@@ -37,32 +37,11 @@ async function main() {
                   return;
             }
 
-
-
             try {
-                  var result2 = await SPTeste();
-                  console.log(result2)
-
-
-                  log.Info("Check procedure SPTeste");
-                  var result = await CheckProceduresExists('SPTeste');
-                  console.log(result, result[0]["Create Procedure"])
-                  if(!result[0]["Create Procedure"])
-                        return;
-            } catch (error) {
-                  log.Error("Erro processo: CheckProceduresExists SPTeste", '', '', error);
-                  return;
-            }
-
-            try {
-                  var result2 = await SelectPedidos();
-                  console.log(result2)
-
-
                   log.Info("Check procedure InsertProdutoEstoque");
                   var result = await CheckProceduresExists('InsertProdutoEstoque');
-                  console.log(result, result[0]["Create Procedure"])
-                  if(!result[0]["Create Procedure"])
+                  console.log(result, result[0]["ROUTINE_DEFINITION"])
+                  if(!result[0]["ROUTINE_DEFINITION"])
                         return;
             } catch (error) {
                   log.Error("Erro processo: CheckProceduresExists InsertProdutoEstoque", '', '', error);
@@ -72,8 +51,8 @@ async function main() {
             try {
                   log.Info("Check procedure updateProduto");
                   var result = await CheckProceduresExists('updateProduto');
-                  console.log(result[0]["Create Procedure"])
-                  if(!result[0]["Create Procedure"])
+                  console.log(result, result[0]["ROUTINE_DEFINITION"])
+                  if(!result[0]["ROUTINE_DEFINITION"])
                         return;
             } catch (error) {
                   log.Error("Erro processo: CheckProceduresExists updateProduto", '', '', error);
