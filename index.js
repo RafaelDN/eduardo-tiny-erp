@@ -37,27 +37,27 @@ async function main() {
                   return;
             }
 
-            try {
-                  log.Info("Check procedure InsertProdutoEstoque");
-                  var result = await CheckProceduresExists('InsertProdutoEstoque');
-                  console.log(result, result[0]["ROUTINE_DEFINITION"])
-                  if(!result[0]["ROUTINE_DEFINITION"])
-                        return;
-            } catch (error) {
-                  log.Error("Erro processo: CheckProceduresExists InsertProdutoEstoque", '', '', error);
-                  return;
-            }
+            // try {
+            //       log.Info("Check procedure InsertProdutoEstoque");
+            //       var result = await CheckProceduresExists('InsertProdutoEstoque');
+            //       console.log(result, result[0]["ROUTINE_DEFINITION"])
+            //       if(!result[0]["ROUTINE_DEFINITION"])
+            //             return;
+            // } catch (error) {
+            //       log.Error("Erro processo: CheckProceduresExists InsertProdutoEstoque", '', '', error);
+            //       return;
+            // }
 
-            try {
-                  log.Info("Check procedure updateProduto");
-                  var result = await CheckProceduresExists('updateProduto');
-                  console.log(result, result[0]["ROUTINE_DEFINITION"])
-                  if(!result[0]["ROUTINE_DEFINITION"])
-                        return;
-            } catch (error) {
-                  log.Error("Erro processo: CheckProceduresExists updateProduto", '', '', error);
-                  return;
-            }
+            // try {
+            //       log.Info("Check procedure updateProduto");
+            //       var result = await CheckProceduresExists('updateProduto');
+            //       console.log(result, result[0]["ROUTINE_DEFINITION"])
+            //       if(!result[0]["ROUTINE_DEFINITION"])
+            //             return;
+            // } catch (error) {
+            //       log.Error("Erro processo: CheckProceduresExists updateProduto", '', '', error);
+            //       return;
+            // }
 
             try {
                   log.Info("Exec processo: ImportarPedidos");
