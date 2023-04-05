@@ -139,6 +139,26 @@ const InsertProdutoEstoque = (id, saldo)  => {
 
       })
 }
+const SPTeste = ()  => {
+
+      return new Promise((s, e) => {
+
+            const connection = createConn()
+            connection.connect();
+            connection.query(`call SPTeste`,
+            function (error, results2, fields) {
+                  connection.destroy();
+
+                  if(error) e(error)
+                  s(results2)
+
+            });
+
+      })
+}
+
+
+
 
 const UpdateProduto = (id, unidadeParam, precoParam, precoPromocionalParam, custoParam, situacao)  => {
 
@@ -290,6 +310,8 @@ export {
       UpdateProdutoSituacao,
 
       UpdateFullPedido,
-      UpdateFullProduto
+      UpdateFullProduto,
+
+      SPTeste
 }
 

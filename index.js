@@ -5,7 +5,7 @@ import { ImportarProdutosEstoqueQueue } from "./workers/ImportarProdutosEstoqueQ
 import { ImportarProdutosQueue } from "./workers/ImportarProdutosQueue.js";
 import cron from 'node-cron'
 import args from 'args'
-import { CheckProceduresExists, Ping, SelectPedidos } from "./mysql.js";
+import { CheckProceduresExists, Ping, SPTeste, SelectPedidos } from "./mysql.js";
 
 args.option('mode', 'Como o processo será executado. Por padrão vai rodar como um console application', 'default')
 const flags = args.parse(process.argv)
@@ -34,6 +34,23 @@ async function main() {
                   console.log(p)
             } catch (error) {
                   log.Error("Erro processo: Ping", '', '', error);
+                  return;
+            }
+
+
+
+            try {
+                  var result2 = await SPTeste();
+                  console.log(result2)
+
+
+                  log.Info("Check procedure SPTeste");
+                  var result = await CheckProceduresExists('SPTeste');
+                  console.log(result, result[0]["Create Procedure"])
+                  if(!result[0]["Create Procedure"])
+                        return;
+            } catch (error) {
+                  log.Error("Erro processo: CheckProceduresExists SPTeste", '', '', error);
                   return;
             }
 
