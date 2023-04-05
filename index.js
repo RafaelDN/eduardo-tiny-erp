@@ -5,7 +5,7 @@ import { ImportarProdutosEstoqueQueue } from "./workers/ImportarProdutosEstoqueQ
 import { ImportarProdutosQueue } from "./workers/ImportarProdutosQueue.js";
 import cron from 'node-cron'
 import args from 'args'
-import { CheckProceduresExists, Ping } from "./mysql.js";
+import { CheckProceduresExists, Ping, SelectPedidos } from "./mysql.js";
 
 args.option('mode', 'Como o processo será executado. Por padrão vai rodar como um console application', 'default')
 const flags = args.parse(process.argv)
@@ -38,6 +38,10 @@ async function main() {
             }
 
             try {
+                  var result2 = await SelectPedidos();
+                  console.log(result2)
+
+
                   log.Info("Check procedure InsertProdutoEstoque");
                   var result = await CheckProceduresExists('InsertProdutoEstoque');
                   console.log(result, result[0]["Create Procedure"])
