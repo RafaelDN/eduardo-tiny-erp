@@ -30,7 +30,8 @@ async function main() {
 
             try {
                   log.Info("Ping it");
-                  await Ping();
+                  var p = await Ping();
+                  console.log(p)
             } catch (error) {
                   log.Error("Erro processo: Ping", '', '', error);
                   return;

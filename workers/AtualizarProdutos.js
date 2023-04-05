@@ -1,8 +1,8 @@
-import { Sleep } from "../helper.js";
-import { SelectProdutosID, UpdateProdutoSituacao } from "../mysql.js";
+import { MapProduto, Sleep } from "../helper.js";
+import { SelectProduto, SelectProdutosID, UpdateFullProduto, UpdateProdutoSituacao } from "../mysql.js";
 import { BuscarProduto } from "../tinyapi.js";
 
-const ImportarProdutos = async () => {
+const AtualizarProdutos = async () => {
 
       try {
             const ProdutosId = (await SelectProdutosID()).map(p => p.id);
@@ -16,12 +16,25 @@ const ImportarProdutos = async () => {
                   console.log('Processando produto:' + id)
 
                   try {
-
                         const resultProdutoIndividual = await BuscarProduto(id);
                         const produtoToMap = resultProdutoIndividual.retorno.produto;
-                        const { situacao } = produtoToMap;
-                        const resultBulk1 = await UpdateProdutoSituacao(id, situacao);
-                        console.table([resultBulk1])
+                        const mapped = MapProduto(produtoToMap);
+                        //const items = MapProdutoPreco(produtoToMap);
+
+                        let produtoCadastro = await SelectProduto(id)
+                        console.log(`produtoCadastro`, produtoCadastro)
+
+                        if(produtoCadastro.length <= 0)
+                        {
+                              // console.log('inserting..')
+                              // await BulkInsertProduto([mapped])
+                              // await BulkInsertProdutoPreco([items])
+                        }
+                        else
+                        {
+                              console.log('updating..')
+                              await UpdateFullProduto(mapped);
+                        }
 
                   } catch (error) {
                         console.log(error)
@@ -38,4 +51,4 @@ const ImportarProdutos = async () => {
       }
 }
 
-await ImportarProdutos();
+await AtualizarProdutos();
