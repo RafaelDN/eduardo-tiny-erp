@@ -35,9 +35,12 @@ const CheckProceduresExists = async (nome)  => {
 
       return new Promise((s, e) => {
 
+            console.log('CheckProceduresExists')
             const connection = createConn()
             connection.connect();
             connection.query(`SHOW CREATE PROCEDURE ${nome}`, function (error, results2) {
+                  console.log('CheckProceduresExists', error, results2)
+
                   connection.destroy();
 
                   if(error) e(error)

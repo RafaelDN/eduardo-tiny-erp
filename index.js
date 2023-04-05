@@ -40,7 +40,7 @@ async function main() {
             try {
                   log.Info("Check procedure InsertProdutoEstoque");
                   var result = await CheckProceduresExists('InsertProdutoEstoque');
-                  console.log(result[0]["Create Procedure"])
+                  console.log(result, result[0]["Create Procedure"])
                   if(!result[0]["Create Procedure"])
                         return;
             } catch (error) {
