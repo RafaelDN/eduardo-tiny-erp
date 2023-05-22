@@ -38,6 +38,7 @@ export const  MapPedido = (pedidoToMap) => {
         situacao: pedidoToMap.situacao,
         id_nota_fiscal: pedidoToMap.id_nota_fiscal,
         id_natureza_operacao: pedidoToMap.id_natureza_operacao,
+        id_vendedor: pedidoToMap.id_vendedor
   };
 }
 
