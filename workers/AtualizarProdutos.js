@@ -1,11 +1,13 @@
 import { MapProduto, Sleep } from "../helper.js";
-import { SelectProduto, SelectProdutosID, UpdateFullProduto, UpdateProdutoSituacao } from "../mysql.js";
+import { SelectProduto, SelectProdutosID, UpdateFullProduto, UpdateProduto, UpdateProdutoSituacao } from "../mysql.js";
 import { BuscarProduto } from "../tinyapi.js";
 
 const AtualizarProdutos = async () => {
 
       try {
-            const ProdutosId = (await SelectProdutosID()).map(p => p.id);
+            let ProdutosId = (await SelectProdutosID()).map(p => p.id);
+
+            ProdutosId = ['768288023']
 
             for (let index = 0; index < ProdutosId.length; index++) {
                   const id = ProdutosId[index];
@@ -19,6 +21,7 @@ const AtualizarProdutos = async () => {
                         const resultProdutoIndividual = await BuscarProduto(id);
                         const produtoToMap = resultProdutoIndividual.retorno.produto;
                         const mapped = MapProduto(produtoToMap);
+
                         //const items = MapProdutoPreco(produtoToMap);
 
                         let produtoCadastro = await SelectProduto(id)
@@ -34,6 +37,9 @@ const AtualizarProdutos = async () => {
                         {
                               console.log('updating..')
                               await UpdateFullProduto(mapped);
+
+                              const { id, unidade, preco, preco_promocional,  preco_custo, situacao, preco_custo_medio} = produtoToMap;
+                              await UpdateProduto(id, unidade, preco, preco_promocional, preco_custo, preco_custo_medio, situacao);
                         }
 
                   } catch (error) {

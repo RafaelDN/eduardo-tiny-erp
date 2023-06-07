@@ -25,9 +25,9 @@ export const ImportarProdutosQueue = async () => {
                         const produto = produtos[index].produto;
 
                         try {
-                              const { id, unidade, preco, preco_promocional,  preco_custo, situacao} = produto;
+                              const { id, unidade, preco, preco_promocional,  preco_custo, situacao, preco_custo_medio} = produto;
                               console.log(`Processando precos ${id}`)
-                              await UpdateProduto(id, unidade, preco, preco_promocional, preco_custo, situacao);
+                              await UpdateProduto(id, unidade, preco, preco_promocional, preco_custo, preco_custo_medio, situacao);
 
                               console.log(`Processando info ${id}`)
                               const resultProdutoIndividual = await BuscarProduto(id);

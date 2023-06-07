@@ -22,4 +22,6 @@ CMD node index.js --mode cron
 # docker ps
 # sudo docker logs -f {id_container}
 # reza
+
+# sudo docker rm {id}
 ###########################

@@ -1,11 +1,12 @@
-import { log } from "./helper.js";
+import { Sleep, log } from "./helper.js";
 import { ImportarPedidos } from "./workers/ImportarPedidos.js";
 import { ImportarProdutos } from "./workers/ImportarProdutos.js";
 import { ImportarProdutosEstoqueQueue } from "./workers/ImportarProdutosEstoqueQueue.js";
 import { ImportarProdutosQueue } from "./workers/ImportarProdutosQueue.js";
 import cron from 'node-cron'
 import args from 'args'
-import { CheckProceduresExists, Ping, SPTeste, SelectPedidos } from "./mysql.js";
+import { CheckProceduresExists, Ping, SPTeste, SelectPedidos, UpdateFullPedido, UpdateProcedures } from "./mysql.js";
+import { BuscarPedido } from "./tinyapi.js";
 
 args.option('mode', 'Como o processo será executado. Por padrão vai rodar como um console application', 'default')
 const flags = args.parse(process.argv)
@@ -38,25 +39,12 @@ async function main() {
             }
 
             // try {
-            //       log.Info("Check procedure InsertProdutoEstoque");
-            //       var result = await CheckProceduresExists('InsertProdutoEstoque');
-            //       console.log(result, result[0]["ROUTINE_DEFINITION"])
-            //       if(!result[0]["ROUTINE_DEFINITION"])
-            //             return;
+            //       log.Info("UpdateProcedures");
+            //       var p = await UpdateProcedures();
+            //       console.log(p)
             // } catch (error) {
-            //       log.Error("Erro processo: CheckProceduresExists InsertProdutoEstoque", '', '', error);
-            //       return;
-            // }
-
-            // try {
-            //       log.Info("Check procedure updateProduto");
-            //       var result = await CheckProceduresExists('updateProduto');
-            //       console.log(result, result[0]["ROUTINE_DEFINITION"])
-            //       if(!result[0]["ROUTINE_DEFINITION"])
-            //             return;
-            // } catch (error) {
-            //       log.Error("Erro processo: CheckProceduresExists updateProduto", '', '', error);
-            //       return;
+            //       log.Error("Erro processo: UpdateProcedures", '', '', error);
+            //       //return;
             // }
 
             try {

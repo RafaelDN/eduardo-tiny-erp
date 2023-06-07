@@ -1,5 +1,6 @@
 import mysql from 'mysql'
 import { env } from './helper.js';
+import fs from 'fs'
 
 const createConn = () => {
       return mysql.createConnection({
@@ -26,6 +27,29 @@ const Ping = async ()  => {
                   if(error) e(error)
                   s(true)
             });
+
+      })
+}
+
+const UpdateProcedures = async (nome)  => {
+
+      return new Promise((s, e) => {
+
+            const createPrceduresScript = fs.readFileSync('procedures.sql', 'utf-8');
+
+            console.log('createPrceduresScript', createPrceduresScript);
+
+            // const connection = createConn()
+            // connection.connect();
+            // connection.query(createPrceduresScript, function (error, results2) {
+            //       console.log('UpdateProcedures', error, results2)
+
+            //       connection.destroy();
+
+            //       if(error) e(error)
+            //       s(results2)
+
+            // });
 
       })
 }
@@ -182,13 +206,13 @@ const SPTeste = ()  => {
 
 
 
-const UpdateProduto = (id, unidadeParam, precoParam, precoPromocionalParam, custoParam, situacao)  => {
+const UpdateProduto = (id, unidadeParam, precoParam, precoPromocionalParam, custoParam, precoCustoMedioParam, situacao)  => {
 
       return new Promise((s, e) => {
 
             const connection = createConn()
             connection.connect();
-            connection.query(`call updateProduto(?,?,?,?,?,?)`, [id, unidadeParam, precoParam, precoPromocionalParam, custoParam, situacao],
+            connection.query(`call updateProdutoV2(?,?,?,?,?,?,?)`, [id, unidadeParam, precoParam, precoPromocionalParam, custoParam, precoCustoMedioParam, situacao],
             function (error, results2, fields) {
                   connection.destroy();
 
@@ -334,6 +358,7 @@ export {
       UpdateFullPedido,
       UpdateFullProduto,
 
-      SPTeste
+      SPTeste,
+      UpdateProcedures
 }
 
