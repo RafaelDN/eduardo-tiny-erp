@@ -17,10 +17,17 @@ EXPOSE 80
 CMD node index.js --mode cron
 
 ###########################
+
+# git pull
+
+#sudo docker stop {id_container}
+#sudo docker rm {id_container}
+#sudo docker image rm {id_image}
+
 # sudo docker build . -t dudu:v2
 # sudo docker run -d --name dockdudu-alive2 dudu:v2
 # docker ps
-# sudo docker logs -f {id_container}
+# sudo docker logs -f --tail 50 {id_container}
 # reza
 
 # sudo docker rm {id}

@@ -7,8 +7,6 @@ const AtualizarProdutos = async () => {
       try {
             let ProdutosId = (await SelectProdutosID()).map(p => p.id);
 
-            ProdutosId = ['768288023']
-
             for (let index = 0; index < ProdutosId.length; index++) {
                   const id = ProdutosId[index];
 
