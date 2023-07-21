@@ -38,15 +38,6 @@ async function main() {
                   return;
             }
 
-            // try {
-            //       log.Info("UpdateProcedures");
-            //       var p = await UpdateProcedures();
-            //       console.log(p)
-            // } catch (error) {
-            //       log.Error("Erro processo: UpdateProcedures", '', '', error);
-            //       //return;
-            // }
-
             try {
                   log.Info("Exec processo: ImportarPedidos");
                   await ImportarPedidos();

@@ -1,6 +1,6 @@
 import { GetDataCorte, log, MapPedido, MapPedidoClient, MapPedidoItems } from "../helper.js";;
 import { BulkInsertPedido, BulkInsertPedidoCliente, BulkInsertPedidoItems, SelectPedidos, UpdateFullPedido } from "../mysql.js";
-import { BuscarPedido, BuscarPedidos } from "../tinyapi.js";
+import { BuscarPedido, BuscarPedidos, BuscarProduto } from "../tinyapi.js";
 
 export const ImportarPedidos = async () => {
 
@@ -53,6 +53,10 @@ export const ImportarPedidos = async () => {
                         const mappedItems = [];
                         for (let index = 0; index < items.length; index++) {
                               const element = items[index];
+
+                              const resultProdutoIndividual = await BuscarProduto(element.id_produto);
+                              const produtoToMap = resultProdutoIndividual.retorno.produto;
+                              element.custo_unitario = produtoToMap.preco_custo;
                               mappedItems.push(element)
                         }
 
@@ -60,8 +64,6 @@ export const ImportarPedidos = async () => {
                         const resultBulk1 = await BulkInsertPedido([mapped])
                         const resultBulk2 = await BulkInsertPedidoCliente([mappedClient])
                         const resultBulk3 = await BulkInsertPedidoItems(mappedItems)
-                        // console.table([resultBulk1, resultBulk2, resultBulk3])
-                        //console.log({mapped,mappedClient,mappedItems})
 
                         pedidosImportados.push(pedido.pedido.id)
                         pedidosGravados.push({
