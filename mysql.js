@@ -242,6 +242,41 @@ const UpdateProdutoSituacao = (id, situacao)  => {
       })
 }
 
+const SelectContasAPagarID = ()  => {
+
+      return new Promise((s, e) => {
+
+            const connection = createConn()
+            connection.connect();
+            connection.query('select distinct id from contas_a_pagar_teste', function (error, results2, fields) {
+                  connection.destroy();
+
+                  if(error) e(error)
+                  s(results2)
+
+            });
+
+      })
+}
+
+const SelectContasAReceberID = ()  => {
+
+      return new Promise((s, e) => {
+
+            const connection = createConn()
+            connection.connect();
+            connection.query('select distinct id from contas_a_receber_teste', function (error, results2, fields) {
+                  connection.destroy();
+
+                  if(error) e(error)
+                  s(results2)
+
+            });
+
+      })
+}
+
+
 const BulkInsertPedido = async (pedidos)  => {
       return await BulkInsertQuery('pedidos', pedidos)
 }
@@ -264,6 +299,14 @@ const BulkInsertProdutoEtoque = async (produtos)  =>{
 
 const BulkInsertProdutoPreco = async (produtos)  =>{
       return await BulkInsertQuery('produtos_preco', produtos)
+}
+
+const BulkInsertContasAPagar = async (contas)  =>{
+      return await BulkInsertQuery('contas_a_pagar_teste', contas)
+}
+
+const BulkInsertContasAReceber = async (contas)  =>{
+      return await BulkInsertQuery('contas_a_receber_teste', contas)
 }
 
 const BulkInsertQuery = (tableName, pedidos)  =>{
@@ -359,6 +402,12 @@ export {
       UpdateFullProduto,
 
       SPTeste,
-      UpdateProcedures
+      UpdateProcedures,
+
+      SelectContasAPagarID,
+      BulkInsertContasAPagar,
+
+      SelectContasAReceberID,
+      BulkInsertContasAReceber
 }
 
