@@ -128,6 +128,27 @@ export function MapProdutoPreco(produto) {
   };
 }
 
+export function MapearNota(nf1) {
+  return {
+    id: nf1.id,
+    data: StringToUSDate(nf1.data),
+    vencimento: StringToUSDate(nf1.vencimento),
+    valor: nf1.valor,
+    nro_documento: nf1.nro_documento,
+    competencia: nf1.competencia,
+    cliente_cod: nf1.cliente.codigo,
+    cliente_nome: nf1.cliente.nome,
+    cliente_cpf_cnpj: nf1.cliente.cpf_cnpj,
+    historico: nf1.historico,
+    categoria: nf1.categoria,
+    situacao: nf1.situacao,
+    ocorrencia: nf1.ocorrencia,
+    dia_vencimento: nf1.dia_vencimento,
+    liquidacao: StringToUSDate(nf1.liquidacao),
+    saldo: nf1.saldo,
+  };
+}
+
 
 const options = {
   folderPath: './logs/',
@@ -158,5 +179,15 @@ export function GetDataCorte(diasParaTras) {
 
   return {
     data: yesterday.toLocaleDateString("pt-BR")
+  }
+}
+
+export async function execFunc(func)
+{
+  try {
+        log.Info(`execFunc ${func.name}`);
+        await func();
+  } catch (error) {
+        log.Error(`execFunc ${func.name}`, 'index.js', func.name, error);
   }
 }
