@@ -1,6 +1,5 @@
 import mysql from 'mysql'
 import { env } from './helper.js';
-import fs from 'fs'
 
 const createConn = () => {
       return mysql.createConnection({
@@ -30,72 +29,6 @@ const Ping = async ()  => {
 
       })
 }
-
-const UpdateProcedures = async (nome)  => {
-
-      return new Promise((s, e) => {
-
-            const createPrceduresScript = fs.readFileSync('procedures.sql', 'utf-8');
-
-            console.log('createPrceduresScript', createPrceduresScript);
-
-            // const connection = createConn()
-            // connection.connect();
-            // connection.query(createPrceduresScript, function (error, results2) {
-            //       console.log('UpdateProcedures', error, results2)
-
-            //       connection.destroy();
-
-            //       if(error) e(error)
-            //       s(results2)
-
-            // });
-
-      })
-}
-
-
-// const CheckProceduresExists = async (nome)  => {
-
-//       return new Promise((s, e) => {
-
-//             console.log('CheckProceduresExists')
-//             const connection = createConn()
-//             connection.connect();
-//             connection.query(`SHOW CREATE PROCEDURE ${nome}`, function (error, results2) {
-//                   console.log('CheckProceduresExists', error, results2)
-
-//                   connection.destroy();
-
-//                   if(error) e(error)
-//                   s(results2)
-
-//             });
-
-//       })
-// }
-
-const CheckProceduresExists = async (nome)  => {
-
-      return new Promise((s, e) => {
-
-            console.log('CheckProceduresExists')
-            const connection = createConn()
-            connection.connect();
-            connection.query(`SELECT ROUTINE_DEFINITION FROM information_schema.ROUTINES WHERE SPECIFIC_NAME='${nome}'`, function (error, results2) {
-                  console.log('CheckProceduresExists', error, results2)
-
-                  connection.destroy();
-
-                  if(error) e(error)
-                  s(results2)
-
-            });
-
-      })
-}
-
-
 
 const SelectProduto = async (id)  => {
 
@@ -185,26 +118,6 @@ const InsertProdutoEstoque = (id, saldo)  => {
 
       })
 }
-const SPTeste = ()  => {
-
-      return new Promise((s, e) => {
-
-            const connection = createConn()
-            connection.connect();
-            connection.query(`call SPTeste`,
-            function (error, results2, fields) {
-                  connection.destroy();
-
-                  if(error) e(error)
-                  s(results2)
-
-            });
-
-      })
-}
-
-
-
 
 const UpdateProduto = (id, unidadeParam, precoParam, precoPromocionalParam, custoParam, precoCustoMedioParam, situacao)  => {
 
@@ -242,13 +155,14 @@ const UpdateProdutoSituacao = (id, situacao)  => {
       })
 }
 
-const SelectContasAPagarID = ()  => {
+
+const Select = (tabela, campos)  => {
 
       return new Promise((s, e) => {
 
             const connection = createConn()
             connection.connect();
-            connection.query('select distinct id from contas_a_pagar_teste', function (error, results2, fields) {
+            connection.query(`select distinct ${campos.join(',')} from ${tabela}`, function (error, results2, fields) {
                   connection.destroy();
 
                   if(error) e(error)
@@ -258,24 +172,6 @@ const SelectContasAPagarID = ()  => {
 
       })
 }
-
-const SelectContasAReceberID = ()  => {
-
-      return new Promise((s, e) => {
-
-            const connection = createConn()
-            connection.connect();
-            connection.query('select distinct id from contas_a_receber_teste', function (error, results2, fields) {
-                  connection.destroy();
-
-                  if(error) e(error)
-                  s(results2)
-
-            });
-
-      })
-}
-
 
 const BulkInsertPedido = async (pedidos)  => {
       return await BulkInsertQuery('pedidos', pedidos)
@@ -301,12 +197,8 @@ const BulkInsertProdutoPreco = async (produtos)  =>{
       return await BulkInsertQuery('produtos_preco', produtos)
 }
 
-const BulkInsertContasAPagar = async (contas)  =>{
-      return await BulkInsertQuery('contas_a_pagar_teste', contas)
-}
-
-const BulkInsertContasAReceber = async (contas)  =>{
-      return await BulkInsertQuery('contas_a_receber_teste', contas)
+const BulkInsert = async (tabela, contas)  =>{
+      return await BulkInsertQuery(tabela, contas)
 }
 
 const BulkInsertQuery = (tableName, pedidos)  =>{
@@ -380,7 +272,8 @@ const UpdateFullProduto = (target)  =>{
 
 export {
       Ping,
-      CheckProceduresExists,
+      BulkInsert,
+      Select,
 
       SelectProduto,
       SelectPedidos,
@@ -400,14 +293,5 @@ export {
 
       UpdateFullPedido,
       UpdateFullProduto,
-
-      SPTeste,
-      UpdateProcedures,
-
-      SelectContasAPagarID,
-      BulkInsertContasAPagar,
-
-      SelectContasAReceberID,
-      BulkInsertContasAReceber
 }
 

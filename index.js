@@ -1,76 +1,104 @@
-import { Sleep, execFunc, log } from "./helper.js";
-import { ImportarPedidos } from "./workers/ImportarPedidos.js";
-import { ImportarProdutos } from "./workers/ImportarProdutos.js";
-import { ImportarProdutosEstoqueQueue } from "./workers/ImportarProdutosEstoqueQueue.js";
-import { ImportarProdutosQueue } from "./workers/ImportarProdutosQueue.js";
-import cron from 'node-cron'
-import args from 'args'
-import { CheckProceduresExists, Ping, SPTeste, SelectPedidos, UpdateFullPedido, UpdateProcedures } from "./mysql.js";
-import { BuscarPedido } from "./tinyapi.js";
+import { execFunc, log, env } from "./helper.js";
+// import { ImportarPedidos } from "./workers/ImportarPedidos.js";
+// import { ImportarProdutos } from "./workers/ImportarProdutos.js";
+// import { ImportarProdutosEstoqueQueue } from "./workers/ImportarProdutosEstoqueQueue.js";
+// import { ImportarProdutosQueue } from "./workers/ImportarProdutosQueue.js";
+import cron from "node-cron";
+import args from "args";
+import { Ping } from "./mysql.js";
+import { createTinyApi } from "./tinyapi.js";
 import { ContasAPagar } from "./workers/ContasAPagar.js";
 import { ContasAReceber } from "./workers/ContasAReceber.js";
 
-args.option('mode', 'Como o processo será executado. Por padrão vai rodar como um console application', 'default')
-const flags = args.parse(process.argv)
+args.option(
+  "mode",
+  "Como o processo será executado. Por padrão vai rodar como um console application"
+);
+args.option(
+  "profile",
+  "Como o processo será executado. Por padrão vai rodar como um console application"
+);
+const flags = args.parse(process.argv);
 
-if(flags.mode === 'default')
-{
+if (flags.profile === "default") {
+  const config = {
+    services: [ContasAPagar, ContasAReceber],
+    tinyApi: createTinyApi(env.API_TINY_TOKEN),
+    profile: flags.profile,
+    tabelas: {
+      contasAPagar: "contas_a_pagar_teste",
+      contasAReceber: "contas_a_receber_teste",
+    },
+  };
+  await runMode(config);
+}
+
+if (flags.profile === "dc") {
+  const config = {
+    services: [ContasAPagar, ContasAReceber],
+    tinyApi: createTinyApi(env.API_TINY_TOKEN_DC),
+    profile: flags.profile,
+    tabelas: {
+      contasAPagar: "contas_a_pagar_teste_dc",
+      contasAReceber: "contas_a_receber_teste_dc",
+    },
+  };
+  await runMode(config);
+}
+
+async function runMode(config) {
+  if (flags.mode === "default") {
+    await main(config);
+  }
+
+  if (flags.mode === "cron") {
+    await main();
+    cron.schedule("*/30 * * * *", async () => {
       await main();
+    });
+  }
+
+  if (flags.mode === "cron-1-am") {
+    cron.schedule("0 1 * * *", async () => {
+      await main(config);
+    });
+  }
 }
 
-if(flags.mode === 'cron')
-{
-      await main();
-      cron.schedule('*/30 * * * *', async () => {
-            await main();
-      });
-}
+async function main(config) {
+  try {
+    log.Info("Início do processo. mode: " + flags.mode);
 
-if(flags.mode === 'cron-1-am')
-{
-      cron.schedule('0 1 * * *', async () => {
-            await main();
-      });
-}
+    await execFunc(Ping, config);
 
-async function main() {
-      try {
+    for (let index = 0; index < config.services.length; index++) {
+      const service = config.services[index];
+      await execFunc(service, config);
+    }
 
-            log.Info("Início do processo. mode: " + flags.mode);
+    // try {
+    //       log.Info("Exec processo: ImportarPedidos");
+    //       await ImportarPedidos();
+    // } catch (error) {
+    //       log.Error("Erro processo: ImportarPedidos", '', '', error);
+    // }
 
-            await execFunc(Ping);
-            await execFunc(ContasAPagar);
-            await execFunc(ContasAReceber);
+    // try {
+    //       log.Info("Exec processo: ImportarProdutosQueue");
+    //       await ImportarProdutosQueue();
+    // } catch (error) {
+    //       log.Error("Erro processo: ImportarProdutosQueue", '', '', error);
+    // }
 
+    // try {
+    //       log.Info("Exec processo: ImportarProdutosEstoqueQueue");
+    //       await ImportarProdutosEstoqueQueue();
+    // } catch (error) {
+    //       log.Error("Erro processo: ImportarProdutosEstoqueQueue", '', '', error);
+    // }
 
-
-            //await ContasAPagar();
-            //await ContasAReceber();
-
-            // try {
-            //       log.Info("Exec processo: ImportarPedidos");
-            //       await ImportarPedidos();
-            // } catch (error) {
-            //       log.Error("Erro processo: ImportarPedidos", '', '', error);
-            // }
-
-            // try {
-            //       log.Info("Exec processo: ImportarProdutosQueue");
-            //       await ImportarProdutosQueue();
-            // } catch (error) {
-            //       log.Error("Erro processo: ImportarProdutosQueue", '', '', error);
-            // }
-
-            // try {
-            //       log.Info("Exec processo: ImportarProdutosEstoqueQueue");
-            //       await ImportarProdutosEstoqueQueue();
-            // } catch (error) {
-            //       log.Error("Erro processo: ImportarProdutosEstoqueQueue", '', '', error);
-            // }
-
-            log.Info("Fim do processo");
-
-      } catch (error) {
-            log.Fatal('Erro dentro do cron', 'main', 'cron.schedule', error);
-      }
+    log.Info("Fim do processo");
+  } catch (error) {
+    log.Fatal("Erro dentro do cron", "main", "cron.schedule", error);
+  }
 }

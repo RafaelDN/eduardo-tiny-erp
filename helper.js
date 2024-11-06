@@ -182,11 +182,11 @@ export function GetDataCorte(diasParaTras) {
   }
 }
 
-export async function execFunc(func)
+export async function execFunc(func, config)
 {
   try {
         log.Info(`execFunc ${func.name}`);
-        await func();
+        await func(config);
   } catch (error) {
         log.Error(`execFunc ${func.name}`, 'index.js', func.name, error);
   }
