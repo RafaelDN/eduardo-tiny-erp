@@ -9,7 +9,7 @@ export const ContasAReceber = async () => {
             const ja_processados = (await SelectContasAReceberID()).map(p => p.id);
 
             const filtros = new Map();
-            filtros.set("data_ini_vencimento", GetDataCorte(5).data);
+            filtros.set("data_ini_vencimento", GetDataCorte(2).data);
             filtros.set("data_fim_vencimento ", GetDataCorte(0).data);
             filtros.set("situacao", "pago");
 
