@@ -14,8 +14,8 @@ RUN npm install
 EXPOSE 80
 
 # Inicia o cron em segundo plano
-CMD node index.js --mode default --profile default
-#CMD node index.js --mode cron-1-am --profile default
+CMD node index.js --mode default --profile dc
+#CMD node index.js --mode cron-1-am --profile dc
 
 ###########################
 

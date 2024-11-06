@@ -1,16 +1,16 @@
 import { GetDataCorte, MapearNota, Sleep } from "../helper.js";
-import { BulkInsertContasAReceber, SelectContasAReceberID } from "../mysql.js";
-import { BuscarContaAReceber, BuscarNotaFiscalAReceber } from "../tinyapi.js";
+import { BulkInsert, Select } from "../mysql.js";
 
-export const ContasAReceber = async () => {
-
+let config = null;
+export const ContasAReceber = async (_config) => {
+      config = _config;
       try {
 
-            const ja_processados = (await SelectContasAReceberID()).map(p => p.id);
+            const ja_processados = (await Select(config.tabelas.contasAReceber, ['id'])).map((p) => p.id);
 
             const filtros = new Map();
-            filtros.set("data_ini_vencimento", GetDataCorte(2).data);
-            filtros.set("data_fim_vencimento ", GetDataCorte(0).data);
+            filtros.set("data_ini_emissao", GetDataCorte(1).data);
+            filtros.set("data_fim_emissao", GetDataCorte(0).data);
             filtros.set("situacao", "pago");
 
             const response = await BuscarContasAReceberRecursivo(filtros);
@@ -29,7 +29,7 @@ const BuscarContasAReceberRecursivo = async (map, pagina = 1, bag = []) => {
     console.log('Buscando pagina:' + pagina)
     map.set('pagina', pagina)
 
-    let contas = await BuscarContaAReceber(map);
+    let contas = await config.tinyApi.BuscarContaAReceber(map);
 
     if(contas.retorno.status != 'OK')
           throw 'Erro!';
@@ -57,13 +57,13 @@ async function ExecutarNfs(nfs, ja_processados) {
           continue;
         }
         console.log("Processando Conta ID " + element.conta.id);
-        const data = await BuscarNotaFiscalAReceber(element.conta.id);
+        const data = await config.tinyApi.BuscarNotaFiscalAReceber(element.conta.id);
         const nf_completa = data.retorno.conta;
 
         // faço o map com os campos que preciso
         const mapped = MapearNota(nf_completa, element.conta);
 
-        await BulkInsertContasAReceber([mapped]);
+        await BulkInsert(config.tabelas.contasAReceber, [mapped]);
 
         await Sleep(2000);
       } catch (error) {
