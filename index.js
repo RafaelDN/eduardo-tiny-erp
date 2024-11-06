@@ -28,7 +28,6 @@ if(flags.mode === 'cron')
 
 if(flags.mode === 'cron-1-am')
 {
-      await main();
       cron.schedule('0 1 * * *', async () => {
             await main();
       });
