@@ -26,8 +26,8 @@ if (flags.profile === "default") {
     tinyApi: createTinyApi(env.API_TINY_TOKEN),
     profile: flags.profile,
     tabelas: {
-      contasAPagar: "contas_a_pagar_teste",
-      contasAReceber: "contas_a_receber_teste",
+      contasAPagar: "contas_a_pagar",
+      contasAReceber: "contas_a_receber",
     },
   };
   await runMode(config);
@@ -39,8 +39,8 @@ if (flags.profile === "dc") {
     tinyApi: createTinyApi(env.API_TINY_TOKEN_DC),
     profile: flags.profile,
     tabelas: {
-      contasAPagar: "contas_a_pagar_teste_dc",
-      contasAReceber: "contas_a_receber_teste_dc",
+      contasAPagar: "contas_a_pagar_dc",
+      contasAReceber: "contas_a_receber_dc",
     },
   };
   await runMode(config);
