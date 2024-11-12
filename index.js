@@ -67,7 +67,9 @@ async function runMode(config) {
 
 async function main(config) {
   try {
-    log.Info("Início do processo. mode: " + flags.mode);
+    log.Info("Início do processo.");
+    log.Info("  mode: " + flags.mode);
+    log.Info("  profile: " + flags.profile);
 
     await execFunc(Ping, config);
 
