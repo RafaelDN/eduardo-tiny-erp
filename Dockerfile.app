@@ -13,6 +13,18 @@ RUN npm install
 # Copie o restante do código da aplicação
 COPY . .
 
+# Mudar para o diretório do app Vite
+WORKDIR /usr/src/app/app/dudu-app
+
+# Instalar as dependências do Vite
+RUN npm install
+
+# Fazer o build do Vite
+RUN npm run build
+
+# Voltar para o diretório principal do Express
+WORKDIR /usr/src/app
+
 # Exponha a porta que o app irá usar
 EXPOSE 8080
 
