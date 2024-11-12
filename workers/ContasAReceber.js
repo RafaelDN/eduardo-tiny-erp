@@ -10,9 +10,10 @@ export const ContasAReceber = async (_config) => {
     ).map((p) => p.id);
 
     const filtros = new Map();
-    filtros.set("data_ini_emissao", GetDataCorte(1).data);
+    filtros.set("data_ini_emissao", GetDataCorte(5).data);
     filtros.set("data_fim_emissao", GetDataCorte(0).data);
-    filtros.set("situacao", "pago");
+
+    log.Info("ContasAReceber filtros: " + JSON.stringify(filtros));
 
     const response = await BuscarContasAReceberRecursivo(filtros);
 
