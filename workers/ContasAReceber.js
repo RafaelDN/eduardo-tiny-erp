@@ -1,4 +1,4 @@
-import { GetDataCorte, MapearNota, Sleep } from "../helper.js";
+import { GetDataCorte, MapearNota, Sleep, log } from "../helper.js";
 import { BulkInsert, Select } from "../mysql.js";
 
 let config = null;
