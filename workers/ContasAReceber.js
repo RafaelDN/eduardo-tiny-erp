@@ -10,7 +10,7 @@ export const ContasAReceber = async (_config) => {
     ).map((p) => p.id);
 
     const filtros = new Map();
-    filtros.set("data_ini_emissao", GetDataCorte(5).data);
+    filtros.set("data_ini_emissao", GetDataCorte(2).data);
     filtros.set("data_fim_emissao", GetDataCorte(0).data);
 
     log.Info("ContasAReceber filtros: " + JSON.stringify(filtros));

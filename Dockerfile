@@ -38,7 +38,8 @@ CMD node index.js --mode cron-1-am --profile default
 
 #######################
 # NOVO
-# sudo git reset --hard origin/production
+# sudo git reset --hard origin/prod
+# sudo docker-compose down
 # sudo docker-compose up --build -d
 # sudo docker ps
 # sudo docker logs -f --tail 50 {id_container}

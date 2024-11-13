@@ -8,7 +8,7 @@ export const ContasAPagar = async (_config) => {
     const ja_processados = (await Select(config.tabelas.contasAPagar, ['id'])).map((p) => p.id);
 
     const filtros = new Map();
-    filtros.set("data_ini_emissao", GetDataCorte(5).data);
+    filtros.set("data_ini_emissao", GetDataCorte(2).data);
     filtros.set("data_fim_emissao", GetDataCorte(0).data);
 
     log.Info("ContasAPagar filtros: " + JSON.stringify(filtros));
