@@ -8,10 +8,10 @@ export const ContasAPagar = async (_config) => {
     const ja_processados = (await Select(config.tabelas.contasAPagar, ['id'])).map((p) => p.id);
 
     const filtros = new Map();
-    filtros.set("data_ini_emissao", GetDataCorte(2).data);
+    filtros.set("data_ini_emissao", GetDataCorte(15).data);
     filtros.set("data_fim_emissao", GetDataCorte(0).data);
 
-    log.Info("ContasAPagar filtros: " + JSON.stringify(filtros));
+    log.Info("ContasAPagar filtros: " + JSON.stringify(Object.fromEntries(filtros), null, 2));
 
     const response = await BuscarContasAPagarRecursivo(filtros);
 
@@ -20,7 +20,16 @@ export const ContasAPagar = async (_config) => {
       []
     );
 
-    await ExecutarNfs(nfs, ja_processados);
+    const faltantes = nfs.filter(element => !ja_processados.includes(+element.conta.id));
+
+    log.Info(`Foram encontradas ${faltantes.length} nfs a serem importadas`);
+
+    if(faltantes.length > 0)
+    {
+      const nf_errors = await ExecutarNfs(faltantes, ja_processados);
+      if(nf_errors.length > 0)
+        await ExecutarNfs(nf_errors, ja_processados);
+    }
   } catch (error) {
     console.log(error);
   }
@@ -45,13 +54,14 @@ const BuscarContasAPagarRecursivo = async (map, pagina = 1, bag = []) => {
 };
 
 async function ExecutarNfs(nfs, ja_processados) {
+  let nfsError = [];
   /*
-        Com a lista de NFs faz a consulta individual
-        */
+    Com a lista de NFs faz a consulta individual
+    */
   for (let index = 0; index < nfs.length; index++) {
-    try {
-      const element = nfs[index];
+    const element = nfs[index];
 
+    try {
       if (ja_processados.includes(+element.conta.id)) {
         console.log(element.conta.id + " ja foi processado");
         continue;
@@ -67,8 +77,11 @@ async function ExecutarNfs(nfs, ja_processados) {
 
       await Sleep(2000);
     } catch (error) {
-      console.log("Caiu no catch 02", error);
+      nfsError.push(element);
+      console.error("Caiu no catch 02", error);
       await Sleep(2000);
     }
   }
+
+  return nfsError;
 }
