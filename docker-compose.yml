@@ -5,7 +5,7 @@ services:
 
   app2:
     build:
-      dockerfile: Dockerfile2
+      dockerfile: Dockerfile.app2
 
   app_dc:
     build:
