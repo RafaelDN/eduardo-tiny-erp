@@ -36,12 +36,23 @@ export const ContasAPagar = async (_config) => {
 };
 
 const BuscarContasAPagarRecursivo = async (map, pagina = 1, bag = []) => {
+  console.log('sleep:1000')
+  await Sleep(1000);
   console.log("Buscando pagina:" + pagina);
   map.set("pagina", pagina);
 
   let contas = await config.tinyApi.BuscarContaAPagar(map);
 
-  if (contas.retorno.status != "OK") throw "Erro!";
+  if (contas.retorno.status != "OK")
+  {
+      console.log("ERRO");
+      console.log(pedidos?.retorno);
+      console.log('sleep:2000')
+      await Sleep(2000);
+      await BuscarContasAPagarRecursivo(map, pagina, bag);
+      return bag;
+  }
+
 
   bag.push(contas);
 
