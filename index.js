@@ -65,16 +65,16 @@ async function runMode(config) {
   }
 
   if (flags.mode === "cron") {
-    await main();
+    await main(config);
     cron.schedule("*/30 * * * *", async () => {
-      await main();
+      await main(config);
     });
   }
 
   if (flags.mode === "cron-2-h") {
-    await main();
+    await main(config);
     cron.schedule("0 */2 * * *", async () => {
-      await main();
+      await main(config);
     });
   }
 
