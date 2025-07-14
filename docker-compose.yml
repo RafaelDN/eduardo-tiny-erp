@@ -10,9 +10,3 @@ services:
   app_dc:
     build:
       dockerfile: Dockerfile.dc
-
-  app_web:
-    build:
-      dockerfile: Dockerfile.app
-    ports:
-      - "8080:8080"
