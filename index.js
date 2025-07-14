@@ -1,8 +1,8 @@
 import { execFunc, log, env } from "./helper.js";
-// import { ImportarPedidos } from "./workers/ImportarPedidos.js";
+import { ImportarPedidos } from "./workers/ImportarPedidos.js";
 // import { ImportarProdutos } from "./workers/ImportarProdutos.js";
-// import { ImportarProdutosEstoqueQueue } from "./workers/ImportarProdutosEstoqueQueue.js";
-// import { ImportarProdutosQueue } from "./workers/ImportarProdutosQueue.js";
+import { ImportarProdutosEstoqueQueue } from "./workers/ImportarProdutosEstoqueQueue.js";
+import { ImportarProdutosQueue } from "./workers/ImportarProdutosQueue.js";
 import cron from "node-cron";
 import args from "args";
 import { Ping } from "./mysql.js";
@@ -23,6 +23,19 @@ const flags = args.parse(process.argv);
 if (flags.profile === "default") {
   const config = {
     services: [ContasAPagar, ContasAReceber],
+    tinyApi: createTinyApi(env.API_TINY_TOKEN),
+    profile: flags.profile,
+    tabelas: {
+      contasAPagar: "contas_a_pagar",
+      contasAReceber: "contas_a_receber",
+    },
+  };
+  await runMode(config);
+}
+
+if (flags.profile === "default2") {
+  const config = {
+    services: [ImportarPedidos, ImportarProdutosQueue, ImportarProdutosEstoqueQueue],
     tinyApi: createTinyApi(env.API_TINY_TOKEN),
     profile: flags.profile,
     tabelas: {
@@ -54,6 +67,13 @@ async function runMode(config) {
   if (flags.mode === "cron") {
     await main();
     cron.schedule("*/30 * * * *", async () => {
+      await main();
+    });
+  }
+
+  if (flags.mode === "cron-2-h") {
+    await main();
+    cron.schedule("0 */2 * * *", async () => {
       await main();
     });
   }

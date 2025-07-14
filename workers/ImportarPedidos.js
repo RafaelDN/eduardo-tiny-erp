@@ -1,9 +1,9 @@
-import { GetDataCorte, log, MapPedido, MapPedidoClient, MapPedidoItems } from "../helper.js";;
+import { GetDataCorte, log, MapPedido, MapPedidoClient, MapPedidoItems, Sleep } from "../helper.js";;
 import { BulkInsertPedido, BulkInsertPedidoCliente, BulkInsertPedidoItems, SelectPedidos, UpdateFullPedido } from "../mysql.js";
-import { BuscarPedido, BuscarPedidos, BuscarProduto } from "../tinyapi.js";
 
-export const ImportarPedidos = async () => {
-
+let config = null;
+export const ImportarPedidos = async (_config) => {
+      config = _config;
       const pedidosImportados = [];
 
       try {
@@ -36,7 +36,7 @@ export const ImportarPedidos = async () => {
                               if(pedido.pedido.situacao != existe.situacao)
                               {
                                     console.log('Atualizando pedido:' + pedido.pedido.id)
-                                    const PedidoCompleto = await BuscarPedido(pedido.pedido.id);
+                                    const PedidoCompleto = await config.tinyApi.BuscarPedido(pedido.pedido.id);
                                     const mapped = MapPedido(PedidoCompleto.retorno.pedido);
                                     await UpdateFullPedido(mapped);
                               }
@@ -46,7 +46,7 @@ export const ImportarPedidos = async () => {
 
                         console.log('Processando pedido:' + pedido.pedido.id)
 
-                        const PedidoCompleto = await BuscarPedido(pedido.pedido.id);
+                        const PedidoCompleto = await config.tinyApi.BuscarPedido(pedido.pedido.id);
                         const mapped = MapPedido(PedidoCompleto.retorno.pedido);
                         const mappedClient = MapPedidoClient(PedidoCompleto.retorno.pedido)
                         const items = MapPedidoItems(PedidoCompleto.retorno.pedido);
@@ -54,7 +54,7 @@ export const ImportarPedidos = async () => {
                         for (let index = 0; index < items.length; index++) {
                               const element = items[index];
 
-                              const resultProdutoIndividual = await BuscarProduto(element.id_produto);
+                              const resultProdutoIndividual = await config.tinyApi.BuscarProduto(element.id_produto);
                               const produtoToMap = resultProdutoIndividual.retorno.produto;
                               element.custo_unitario = produtoToMap.preco_custo;
                               mappedItems.push(element)
@@ -86,13 +86,23 @@ export const ImportarPedidos = async () => {
 }
 
 const BuscarPedidosRecursivo = async (map, pagina = 1, bag = []) => {
+      console.log('sleep:1000')
+      await Sleep(1000);
       console.log('Buscando pagina:' + pagina)
       map.set('pagina', pagina)
 
-      let pedidos = await BuscarPedidos(map);
+      let pedidos = await config.tinyApi.BuscarPedidos(map);
 
       if(pedidos.retorno.status != 'OK')
-            throw 'Erro!';
+      {
+            console.log("ERRO");
+            console.log(pedidos?.retorno);
+            console.log('sleep:2000')
+            await Sleep(2000);
+            await BuscarPedidosRecursivo(map, pagina, bag);
+            return bag;
+            //throw 'Erro!';
+      }
 
       bag.push(pedidos);
 

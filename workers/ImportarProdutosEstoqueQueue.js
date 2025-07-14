@@ -1,9 +1,9 @@
 import { GetDataCorte, log } from "../helper.js";
 import { InsertProdutoEstoque } from "../mysql.js";
-import { BuscarProdutoEstoqueQueue } from "../tinyapi.js";
 
-export const ImportarProdutosEstoqueQueue = async () => {
-
+let config = null;
+export const ImportarProdutosEstoqueQueue = async (_config) => {
+      config = _config;
       try {
             const DataCorte = GetDataCorte(5).data;
             console.log(`DataCorte ImportarProdutosEstoqueQueue`, DataCorte)
@@ -12,7 +12,7 @@ export const ImportarProdutosEstoqueQueue = async () => {
             map.set("dataAlteracao", DataCorte);
 
             while (true) {
-                  const data = await BuscarProdutoEstoqueQueue(map);
+                  const data = await config.tinyApi.BuscarProdutoEstoqueQueue(map);
                   const produtos = data.retorno.produtos;
 
                   if(!produtos || produtos.length <= 0){

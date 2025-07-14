@@ -1,9 +1,9 @@
 import { GetDataCorte, log, MapProduto, MapProdutoPreco } from "../helper.js";
 import {  BulkInsertProduto, BulkInsertProdutoPreco, SelectProduto, UpdateFullProduto, UpdateProduto } from "../mysql.js";
-import { BuscarProduto, BuscarProdutoAtualizacaoQueue } from "../tinyapi.js";
 
-export const ImportarProdutosQueue = async () => {
-
+let config = null;
+export const ImportarProdutosQueue = async (_config) => {
+      config = _config;
       try {
             const DataCorte = GetDataCorte(5).data;
             console.log(`DataCorte ImportarProdutosQueue`, DataCorte)
@@ -13,7 +13,9 @@ export const ImportarProdutosQueue = async () => {
 
             while (true) {
 
-                  const data = await BuscarProdutoAtualizacaoQueue(map);
+                  const data = await config.tinyApi.BuscarProdutoAtualizacaoQueue(map);
+                  console.log(data);
+                  console.log(data.retorno);
                   const produtos = data.retorno.produtos;
 
                   if(!produtos || produtos.length <= 0) {
@@ -30,7 +32,7 @@ export const ImportarProdutosQueue = async () => {
                               await UpdateProduto(id, unidade, preco, preco_promocional, preco_custo, preco_custo_medio, situacao);
 
                               console.log(`Processando info ${id}`)
-                              const resultProdutoIndividual = await BuscarProduto(id);
+                              const resultProdutoIndividual = await config.tinyApi.BuscarProduto(id);
                               const produtoToMap = resultProdutoIndividual.retorno.produto;
                               const mapped = MapProduto(produtoToMap);
                               const items = MapProdutoPreco(produtoToMap);
@@ -61,42 +63,3 @@ export const ImportarProdutosQueue = async () => {
       }
 
 }
-
-// try {
-
-//       const PedidosProdutosId = (await SelectPedidosProdutosID()).map(p => p.id_produto);
-//       const ProdutosId = (await SelectProdutosID()).map(p => p.id);
-//       let Faltantes = PedidosProdutosId.filter(pp => !ProdutosId.includes(pp))
-
-//       console.log(PedidosProdutosId.length)
-//       console.log(ProdutosId.length)
-//       console.log(Faltantes.length)
-
-//       for (let index = 0; index < Faltantes.length; index++) {
-//             const id = Faltantes[index];
-
-//             if(id <= 0)
-//                   continue;
-
-//             console.log('Processando produto:' + id)
-
-//             try {
-
-//                   const resultProdutoIndividual = await BuscarProduto(id);
-//                   const produtoToMap = resultProdutoIndividual.retorno.produto;
-//                   const mapped = MapProduto(produtoToMap);
-//                   const items = MapProdutoPreco(produtoToMap);
-
-//                   const resultBulk1 = await BulkInsertProduto([mapped])
-//                   const resultBulk3 = await BulkInsertProdutoPreco([items])
-//                   //console.table([resultBulk1, resultBulk3])
-
-//             } catch (error) {
-//                   console.log(error)
-//             }
-//       }
-
-// } catch (error) {
-//       console.log(error)
-
-// }

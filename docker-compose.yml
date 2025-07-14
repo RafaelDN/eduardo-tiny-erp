@@ -3,6 +3,10 @@ services:
     build:
       dockerfile: Dockerfile
 
+  app2:
+    build:
+      dockerfile: Dockerfile2
+
   app_dc:
     build:
       dockerfile: Dockerfile.dc

@@ -12,7 +12,7 @@ function createTinyApi(token) {
       qs.push(`${key}=${value}`);
     }
 
-    await Sleep(1000);
+    await Sleep(3000);
     const { data } = await http.get(
       `pedidos.pesquisa.php?token=${token}&formato=json&${qs.join("&")}`
     );
